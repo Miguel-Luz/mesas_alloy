@@ -1,15 +1,27 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:teste_flutter/features/customers/entities/customer.entity.dart';
 
-class TableEntity {
-  TableEntity({
+import 'package:mobx/mobx.dart';
+part 'table.entity.g.dart';
+
+class TableEntity = _TableEntityBase with _$TableEntity;
+
+abstract class _TableEntityBase with Store {
+  _TableEntityBase({
     required this.id,
     required this.identification,
     required this.customers,
   });
 
-  final int id;
-  final String identification;
-  final List<CustomerEntity> customers;
+  @observable
+  int id;
+
+  @observable
+  String identification;
+
+  @observable
+  List<CustomerEntity> customers;
 
   TableEntity copyWith({
     String? identification,
