@@ -21,11 +21,21 @@ abstract class _TableEntityBase with Store {
   String identification;
 
   @observable
-  List<CustomerEntity> customers;
+  ObservableList<CustomerEntity> customers = ObservableList.of([]);
+
+  @computed
+  String get spaceBusy =>
+      customers.where((customer) => customer.busy).length.toString();
+
+  @computed
+  String get spaceQuantity => customers.length.toString();
+
+  @computed
+  String get occupation => '$spaceBusy/$spaceQuantity';
 
   TableEntity copyWith({
     String? identification,
-    List<CustomerEntity>? customers,
+    ObservableList<CustomerEntity>? customers,
   }) {
     return TableEntity(
       id: id,

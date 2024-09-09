@@ -4,6 +4,7 @@ abstract final class AppIcons {
   static const String twoPerson = 'assets/icons/two_person.svg';
   static const String user = 'assets/icons/user.svg';
   static const String userAdd = 'assets/icons/user_add.svg';
+  static const String userRemove = 'assets/icons/user_remove.svg';
 
   static String getCustom(String fileName, {String? folder}) {
     if (folder != null && folder.isNotEmpty) {

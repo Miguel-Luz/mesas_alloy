@@ -9,6 +9,21 @@ part of 'table.entity.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$TableEntity on _TableEntityBase, Store {
+  Computed<String>? _$spaceBusyComputed;
+
+  @override
+  String get spaceBusy =>
+      (_$spaceBusyComputed ??= Computed<String>(() => super.spaceBusy,
+              name: '_TableEntityBase.spaceBusy'))
+          .value;
+  Computed<String>? _$spaceQuantityComputed;
+
+  @override
+  String get spaceQuantity =>
+      (_$spaceQuantityComputed ??= Computed<String>(() => super.spaceQuantity,
+              name: '_TableEntityBase.spaceQuantity'))
+          .value;
+
   late final _$idAtom = Atom(name: '_TableEntityBase.id', context: context);
 
   @override
@@ -44,13 +59,13 @@ mixin _$TableEntity on _TableEntityBase, Store {
       Atom(name: '_TableEntityBase.customers', context: context);
 
   @override
-  List<CustomerEntity> get customers {
+  ObservableList<CustomerEntity> get customers {
     _$customersAtom.reportRead();
     return super.customers;
   }
 
   @override
-  set customers(List<CustomerEntity> value) {
+  set customers(ObservableList<CustomerEntity> value) {
     _$customersAtom.reportWrite(value, super.customers, () {
       super.customers = value;
     });
@@ -61,7 +76,9 @@ mixin _$TableEntity on _TableEntityBase, Store {
     return '''
 id: ${id},
 identification: ${identification},
-customers: ${customers}
+customers: ${customers},
+spaceBusy: ${spaceBusy},
+spaceQuantity: ${spaceQuantity}
     ''';
   }
 }

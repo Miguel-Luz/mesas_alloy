@@ -3,32 +3,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:teste_flutter/features/customers/entities/customer.entity.dart';
-import 'package:teste_flutter/features/customers/stores/customers.store.dart';
+import 'package:teste_flutter/features/tables/entities/table.entity.dart';
+import 'package:teste_flutter/features/tables/stores/tables.store.dart';
 import 'package:teste_flutter/shared/widgets/modal.widget.dart';
 import 'package:teste_flutter/shared/widgets/primary_button.widget.dart';
 import 'package:teste_flutter/shared/widgets/secondary_button.widget.dart';
 
 class EditCustomerModal extends StatefulWidget {
-  const EditCustomerModal({super.key, this.customer});
+  const EditCustomerModal({
+    super.key,
+    required this.customer,
+    required this.table,
+  });
 
-  final CustomerEntity? customer;
+  final CustomerEntity customer;
+  final TableEntity table;
 
   @override
   State<EditCustomerModal> createState() => _EditCustomerModalState();
 }
 
 class _EditCustomerModalState extends State<EditCustomerModal> {
-  CustomerEntity? get customer => widget.customer;
+  CustomerEntity get customer => widget.customer;
+  TableEntity get table => widget.table;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final CustomersStore customersStore = GetIt.I<CustomersStore>();
+  final tableStore = GetIt.I<TablesStore>();
 
   @override
   void initState() {
     super.initState();
-    nameController.text = customer?.name ?? '';
-    phoneController.text = customer?.phone ?? '';
+    nameController.text = customer.name;
+    phoneController.text = customer.phone;
   }
 
   void handleSave() {
@@ -36,18 +43,12 @@ class _EditCustomerModalState extends State<EditCustomerModal> {
       return;
     }
 
-    final newCustomer = CustomerEntity(
-      id: customer?.id ?? DateTime.now().millisecondsSinceEpoch,
+    final updateCostumer = customer.copyWith(
       name: nameController.text,
       phone: phoneController.text,
+      busy: true,
     );
-
-    if (customer == null) {
-      customersStore.addCustomer(newCustomer);
-    } else {
-      customersStore.updateCustomer(newCustomer);
-    }
-
+    tableStore.updateCustomerAtTable(customer: updateCostumer, table: table);
     Navigator.of(context).pop();
   }
 
@@ -64,7 +65,7 @@ class _EditCustomerModalState extends State<EditCustomerModal> {
       key: formKey,
       child: Modal(
         width: 280,
-        title: '${customer == null ? 'Novo' : 'Editar'} cliente',
+        title: 'Editar cliente',
         content: [
           TextFormField(
             controller: nameController,
@@ -86,7 +87,9 @@ class _EditCustomerModalState extends State<EditCustomerModal> {
         actionsAlignment: MainAxisAlignment.end,
         actions: [
           SecondaryButton(
-              onPressed: () => Navigator.of(context).pop(), text: 'Cancelar'),
+            onPressed: () => Navigator.of(context).pop(),
+            text: 'Cancelar',
+          ),
           PrimaryButton(onPressed: handleSave, text: 'Salvar'),
         ],
       ),
